@@ -1,103 +1,121 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import React, {useState} from 'react';
+import {
+    TextField,
+    Button,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+    Box,
+    Link
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {styled} from "@mui/system";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+const Footer = styled("footer")`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 5mm;
+    text-align: center;
+`;
+
+const CopyrightItem = styled(Typography)`
+    display: flex;
+    margin: 0 2mm;
+`;
+
+const HomePage: React.FC = () => {
+    const [trials, setTrials] = useState<number>(100);
+    const [switches, setSwitches] = useState<number>(1);
+    const [baseAmount, setBaseAmount] = useState<number>(10);
+    const [results, setResults] = useState<number[]>([]);
+    const [average, setAverage] = useState<number | null>(null);
+
+    const handleSimulate = () => {
+        const res: number[] = [];
+        for (let i = 0; i < trials; i++) {
+            const s = baseAmount;
+            // Set amount of money in each envelope
+            const amountA = Math.random() < 0.5 ? s : 2 * s;
+            const amountB = amountA === s ? 2 * s : s;
+            // Determine which envelope to switch to
+            const finalAmount = (switches + Math.random() < 0.5 ? 0 : 1) % 2 === 1 ? amountB : amountA;
+            res.push(finalAmount);
+        }
+        setResults(res);
+        const avg = res.reduce((sum, x) => sum + x, 0) / trials;
+        setAverage(avg);
+    };
+
+    return (
+        <Box sx={{width: '100%', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Box sx={{p: 4, justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column', marginBottom: 4}}>
+                <Typography variant="h4" gutterBottom>
+                    Two Envelopes Problem
+                </Typography>
+                <Typography variant="h6" gutterBottom>
+                    Do you believe the money grows as you switch envelopes?
+                </Typography>
+
+                <Box sx={{display: 'flex', gap: 2, mb: 2, marginTop: 2}}>
+                    <TextField
+                        label="Trials"
+                        type="number"
+                        value={trials}
+                        onChange={(e) => setTrials(Number(e.target.value))}
+                    />
+                    <TextField
+                        label="Switches"
+                        type="number"
+                        value={switches}
+                        onChange={(e) => setSwitches(Number(e.target.value))}
+                    />
+                    <TextField
+                        label="Base Amount S"
+                        type="number"
+                        value={baseAmount}
+                        onChange={(e) => setBaseAmount(Number(e.target.value))}
+                    />
+                </Box>
+
+                <Button variant="contained" onClick={handleSimulate}>
+                    START
+                </Button>
+
+                {average !== null && (
+                    <Box sx={{mt: 3}}>
+                        <Typography>
+                            Average Amount: <strong>{average.toFixed(2)}</strong>
+                        </Typography>
+
+                        <Accordion>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                                <Typography>See details</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                {results.map((amt, idx) => (
+                                    <Typography key={idx}>
+                                        Trial #{idx + 1}: {amt}
+                                    </Typography>
+                                ))}
+                            </AccordionDetails>
+                        </Accordion>
+                    </Box>
+                )}
+            </Box>
+            <Footer>
+                <CopyrightItem><Link href={""}>Xingyu Zhou</Link></CopyrightItem>
+                <CopyrightItem>2025</CopyrightItem>
+                <CopyrightItem>All rights reserved</CopyrightItem>
+            </Footer>
+        </Box>
+    );
+};
+
+export default HomePage;
