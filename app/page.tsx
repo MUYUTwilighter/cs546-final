@@ -110,7 +110,7 @@ const HomePage: React.FC = () => {
                 )}
             </Box>
             <Footer>
-                <CopyrightItem><Link href={""}>Xingyu Zhou</Link></CopyrightItem>
+                <CopyrightItem><Link href={"https://github.com/MUYUTwilighter"}>Xingyu Zhou</Link></CopyrightItem>
                 <CopyrightItem>2025</CopyrightItem>
                 <CopyrightItem>All rights reserved</CopyrightItem>
             </Footer>
